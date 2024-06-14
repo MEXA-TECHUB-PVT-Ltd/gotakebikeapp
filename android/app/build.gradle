@@ -1,4 +1,5 @@
 apply plugin: "com.android.application"
+apply from: file("../../node_modules/react-native-vector-icons/fonts.gradle")
 
 import com.android.build.OutputFile
 import org.apache.tools.ant.taskdefs.condition.Os
@@ -81,6 +82,10 @@ import org.apache.tools.ant.taskdefs.condition.Os
 project.ext.react = [
     enableHermes: true,  // clean and rebuild if changing
 ]
+
+ 
+
+
 
 apply from: "../../node_modules/react-native/react.gradle"
 
@@ -200,6 +205,18 @@ android {
                 }
             }
         }
+    }
+
+     sourceSets {
+        main {
+            jniLibs.srcDirs = ['src/main/jniLibs']
+        }
+    }
+     packagingOptions {
+        pickFirst 'lib/x86/libscreens.so'
+        pickFirst 'lib/x86_64/libscreens.so'
+        pickFirst 'lib/arm64-v8a/libscreens.so'
+        pickFirst 'lib/armeabi-v7a/libscreens.so'
     }
 
     splits {
