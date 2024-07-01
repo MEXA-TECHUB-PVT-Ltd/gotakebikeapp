@@ -11,5 +11,16 @@ export const images = {
     flag:require("../assets/flag.png"),
     manualCard:require("../assets/manualCard.png"),
     identify:require("../assets/identify.png"),
-    bell:require("../assets/bell.png")
+    bell:require("../assets/bell.png"),
+    warning:require("../assets/warning.png"),
+    bike:require("../assets/bike.png"),
+    bikeFront2:require("../assets/bikeFront2.png"),
+    helmet:require("../assets/helmet.svg"),
+    logout:require("../assets/logout.png"),
+    address:require("../assets/address.png"),
+    edit:require("../assets/edit.png"),
+    card:require("../assets/card.png"),
+    chat:require("../assets/chat.png"),
+    wallet:require("../assets/wallet.png")
+
 }

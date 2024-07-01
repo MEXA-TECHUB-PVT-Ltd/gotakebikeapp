@@ -11,6 +11,7 @@ export const fonts = {
     WHITE:'#fff',
     descriptionTxtColor:'#727272',
     BLACK:"#000",
-    HEADER_BG:"#C669FF"
+    HEADER_BG:"#C669FF",
+    PINK:"#E0AFFF"
 
 }
