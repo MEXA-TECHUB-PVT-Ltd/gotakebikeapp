@@ -14,26 +14,71 @@ export const formatDateTime = (date) => {
 };
 
 export const getTitle = (item, state) => {
-    switch (item.title) {
-        case "Search Bike Modal":
-            return state.bikeModel || item.title;
-        case "Start Date & time":
-            return state.startdateTime || item.title;
-        case "End Date & time":
-            return state.enddateTime || item.title;
-        case "PickDate":
-            setState(prevState => ({ ...prevState, premiumDate: formatedResult }));
-            break;
-        case "PremiumStart":
-            setState(prevState => ({ ...prevState, premiumStarttime: formatedResult }));
-            break;
-        case "PremiumEnd":
-            setState(prevState => ({ ...prevState, premiumEndtime: formatedResult }));
-            break;
-        default:
-            return item.title;
-    }
+    const titleMappings = {
+        "Search Bike Modal": state.bikeModel,
+        "Start Date & time": state.startdateTime,
+        "End Date & time": state.enddateTime,
+        "Pick Date": state.premiumDate,
+        "Start Time": state.premiumStarttime,
+        "End Time": state.premiumEndtime
+    };
+
+    return titleMappings[item.title] || item.title;
 };
+
+
+export const formatCardNumber = (text) => {
+    const formattedText = text.replace(/[^\d]/g, '');
+    const maxLength = 16;
+    let newValue = '';
+    for (let i = 0; i < Math.min(formattedText.length, maxLength); i++) {
+        if (i > 0 && i % 4 === 0) {
+            newValue += ' ';
+        }
+        newValue += formattedText[i];
+    }
+    return newValue;
+};
+
+export const formatExpiryDate = (text) => {
+    const formattedText = text.replace(/[^\d]/g, '');
+
+    let newValue = '';
+    let isValid = true; // Flag to indicate validity of the expiry date
+
+    // Handle the first two characters as month (MM)
+    if (formattedText.length >= 2) {
+        const month = parseInt(formattedText.substring(0, 2), 10);
+
+        // Validate month between 1 and 12
+        if (month < 1 || month > 12) {
+            newValue += '01';
+            isValid = false; // Set validity flag to false
+        } else {
+            newValue += `${month < 10 ? '0' + month : month}`;
+        }
+    } else if (formattedText.length > 0) {
+        // If only one digit is entered, directly append it (for example, '1' becomes '01')
+        newValue += formattedText;
+    }
+
+    // Handle the next two characters as year (YY)
+    if (formattedText.length >= 3) {
+        const year = formattedText.substring(2, 4); // Extract YY part
+        newValue += `/${year}`;
+    }
+
+    return { formattedValue: newValue, isValid };
+};
+
+
+
+
+
+
+
+
+
 
 
 

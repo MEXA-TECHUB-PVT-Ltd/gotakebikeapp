@@ -13,7 +13,7 @@ const Home = ({navigation}) => {
 
         </View>
       </>
-      <View style={styles.searchbutton}>
+      <View style={globalStyel.searchbutton}>
         <Custombutton
           startIcon={<AntDesign name={"search1"} size={24} color={"#fff"} />}
           title={"Search Ride"}
@@ -28,11 +28,5 @@ const Home = ({navigation}) => {
 export default Home
 
 const styles = StyleSheet.create({
-  searchbutton: {
-    position: 'absolute',
-    bottom: 0,
-    width: '50%',
-    alignSelf: 'center',
-    paddingBottom: 20
-  }
+
 })

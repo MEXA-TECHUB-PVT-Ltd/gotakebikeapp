@@ -2,11 +2,12 @@ import * as React from 'react';
 import { Text } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from '../screens/appscreens/tabs/Home/Home';
-import Search from '../screens/appscreens/tabs/Search/Search';
-import Filter from '../screens/appscreens/tabs/Filter/Filter';
+import MyWallet from '../screens/appscreens/tabs/Wallet/Mywallet';
 import Profile from '../screens/appscreens/tabs/Profile/Profile';
 import Icon from 'react-native-vector-icons/Ionicons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import { fonts } from '../utils/fonts';
+import History from '../screens/appscreens/tabs/RideHistory/History';
 
 
 
@@ -21,10 +22,11 @@ export default function TabsNav() {
                     let iconName;
                     if (route.name === 'Home') {
                         iconName = focused ? 'home' : 'home-outline';
-                    } else if (route.name === 'Search') {
-                        iconName = focused ? 'search' : 'search-outline';
-                    } else if (route.name === 'Filter') {
-                        iconName = focused ? 'filter' : 'filter-outline';
+                    } else if (route.name === 'History') {
+                        iconName = focused ? 'history' : 'history';
+                        return <MaterialCommunityIcons name={iconName} size={25} color={color} />
+                    } else if (route.name === 'MyWallet') {
+                        iconName = focused ? 'wallet' : 'wallet';
                     } else if (route.name === 'Profile') {
                         iconName = focused ? 'person' : 'person-outline';
                     }
@@ -35,10 +37,10 @@ export default function TabsNav() {
                     let label;
                     if (route.name === 'Home') {
                         label = 'Home';
-                    } else if (route.name === 'Search') {
-                        label = 'Search';
-                    } else if (route.name === 'Filter') {
-                        label = 'Filter';
+                    } else if (route.name === 'History') {
+                        label = 'History';
+                    } else if (route.name === 'MyWallet') {
+                        label = 'Wallet';
                     } else if (route.name === 'Profile') {
                         label = 'Profile';
                     }
@@ -66,8 +68,8 @@ export default function TabsNav() {
             })}
         >
             <Tab.Screen name="Home" component={Home} />
-            <Tab.Screen name="Search" component={Search} />
-            <Tab.Screen name="Filter" component={Filter} />
+            <Tab.Screen name="History" component={History} />
+            <Tab.Screen name="MyWallet" component={MyWallet} />
             <Tab.Screen name="Profile" component={Profile} />
         </Tab.Navigator>
     );

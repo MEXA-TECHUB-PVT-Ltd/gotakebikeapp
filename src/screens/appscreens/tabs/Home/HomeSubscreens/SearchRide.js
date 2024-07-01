@@ -44,68 +44,55 @@ const SearchRide = ({ navigation }) => {
         setState(prevState => ({ ...prevState, showPicker: false }));
     };
     const handleDateChange = (date, type) => {
-        const formatedResult = formatDateTime(date);
-        switch (type) {
-            case "PickDate":
-                setState(prevState => ({ ...prevState, premiumDate: formatedResult }));
-                break;
-            case "PremiumStart":
-                setState(prevState => ({ ...prevState, premiumStarttime: formatedResult }));
-                break;
-            case "PremiumEnd":
-                setState(prevState => ({ ...prevState, premiumEndtime: formatedResult }));
-                break;
-            case "Start":
-                setState(prevState => ({ ...prevState, startdateTime: formatedResult }));
-                break;
-            case "End":
-                setState(prevState => ({ ...prevState, enddateTime: formatedResult }));
-                break;
-            default:
-                break;
-        }
+        const formattedResult = formatDateTime(date);
+        const dateTypeMapping = {
+            "PickDate": { premiumDate: formattedResult },
+            "PremiumStart": { premiumStarttime: formattedResult },
+            "PremiumEnd": { premiumEndtime: formattedResult },
+            "Start": { startdateTime: formattedResult },
+            "End": { enddateTime: formattedResult }
+        };
+
+        setState(prevState => ({
+            ...prevState,
+            ...dateTypeMapping[type]
+        }));
     };
-
-
-
     const _handlSearchByType = (value) => {
-        if (state.package === "premium") {
-            if (value.title === "Pick Date" || value.title === "Start Time" || value.title == "End Time") {
-                handleOpenPicker();
-                setState(prevState => ({
-                    ...prevState,
-                    dateType: value.title === "Pick Date" ? "PickDate" : value.title == "Start Time" ? "PremiumStart" : "PremiumEnd"
-                }));
-            } else {
-                refRBSheet.current.open();
-                setState(prevState => ({
-                    ...prevState,
-                    searchType: value.title,
-                    isVisible: true,
-                    typeId: value.id
-                }));
-            }
+        if (value.title === "Location") {
+            navigation.navigate("AddLocation")
+            return;
+        }
+        const isPremium = state.package === "premium";
+        const dateTypes = {
+            "Pick Date": "PickDate",
+            "Start Time": "PremiumStart",
+            "End Time": "PremiumEnd",
+            "Start Date & time": "Start",
+            "End Date & time": "End"
+        };
+
+        const isDateType = dateTypes[value.title] !== undefined;
+        const dateType = dateTypes[value.title];
+        if (isDateType) {
+            handleOpenPicker();
+            setState(prevState => ({
+                ...prevState,
+                dateType: dateType
+            }));
         } else {
-            if (value.title === "Start Date & time" || value.title === "End Date & time") {
-                handleOpenPicker();
-                setState(prevState => ({
-                    ...prevState,
-                    dateType: value.title === "Start Date & time" ? "Start" : "End"
-                }));
-            } else {
-                refRBSheet.current.open();
-                setState(prevState => ({
-                    ...prevState,
-                    searchType: value.title,
-                    isVisible: true,
-                    typeId: value.id
-                }));
-            }
+            refRBSheet.current.open();
+            setState(prevState => ({
+                ...prevState,
+                searchType: value.title,
+                isVisible: true,
+                typeId: value.id
+            }));
         }
     };
 
     const handleSelectBikeModel = (item) => {
-        setState((prevState) => ({
+        setState(prevState => ({
             ...prevState,
             bikeModel: item.title
         }));
@@ -134,6 +121,25 @@ const SearchRide = ({ navigation }) => {
             typeId: -1
         }))
     }
+
+    const renderItems = (items, state) => {
+        return items.map((item) => (
+            <TouchableOpacity onPress={() => _handlSearchByType(item)} style={styles.dataStyle} key={item.id}>
+                <Text style={globalStyel.globalTxt}>{getTitle(item, state)}</Text>
+                <MaterialIcons
+                    name={item.title == "Location" ? "arrow-forward-ios" : (state.isVisible && state.typeId == item.id ? 'keyboard-arrow-up' : "keyboard-arrow-down")}
+                    size={item.title == "Location" ? 18 : 24}
+                    style={{ opacity: 0.37 }}
+                    color={"#151515"}
+                />
+            </TouchableOpacity>
+        ));
+    };
+
+    const renderSelectionView = (state) => {
+        const items = state.package === "economy" ? searchRideArraEconomy : searchRideArraPremium;
+        return renderItems(items, state);
+    };
     return (
         <View style={globalStyel.tabsContainer}>
             <TabsHeader
@@ -150,27 +156,7 @@ const SearchRide = ({ navigation }) => {
                         onPress={(type) => _handleRideSearch(type)}
                     />
                     <View style={styles.selectionViewstyle}>
-                        {state.package == "economy" ?
-                            <>
-                                {searchRideArraEconomy.map((item) => (
-                                    <TouchableOpacity onPress={() => _handlSearchByType(item)} style={styles.dataStyle}>
-                                        <Text style={globalStyel.globalTxt}>{getTitle(item, state)}</Text>
-                                        <MaterialIcons name={state.isVisible && state.typeId == item.id ? 'keyboard-arrow-up' : "keyboard-arrow-down"} size={24} style={{ opacity: 0.37 }} color={"#151515"} />
-                                    </TouchableOpacity>
-                                ))}
-                            </> : <>
-                                {searchRideArraPremium.map((item) => (
-                                    <TouchableOpacity onPress={() => _handlSearchByType(item)} style={styles.dataStyle}>
-                                        <Text style={globalStyel.globalTxt}>{getTitle(item, state)}</Text>
-                                        <MaterialIcons name={state.isVisible && state.typeId == item.id ? 'keyboard-arrow-up' : "keyboard-arrow-down"} size={24} style={{ opacity: 0.37 }} color={"#151515"} />
-                                    </TouchableOpacity>
-                                ))
-                                }
-                            </>
-
-
-                        }
-
+                        {renderSelectionView(state)}
                     </View>
                     <Custombutton
                         title={"Search Ride"}
